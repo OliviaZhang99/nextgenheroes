@@ -1,1 +1,572 @@
 
+<!doctype html>
+<html lang="en">
+<head>
+  <!--
+    NextGen HERoes – One-page site (single copy, no background blur, no focus ring)
+    If you ever see the entire page twice, your file likely contains TWO complete HTML documents.
+    Fix: Select all (Ctrl/Cmd + A) → paste THIS file only → save. Ensure there is only one <!doctype html> at the top
+    and one closing </html> at the bottom.
+
+    Changes in this pass:
+    • Added GALLERY section under Events with 6 image slots + lightbox viewer.
+    • Fancy polish: hover-lift on cards/buttons, animated headers, gentle scroll-reveal.
+    • Kept all previous constraints (no blur, no dotted focus ring, Instagram-only footer).
+  -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NextGen HERoes</title>
+  <meta name="description" content="NextGen HERoes — a student-led STEM nonprofit building confidence, community, and career pathways for girls in STEM." />
+  <meta property="og:title" content="NextGen HERoes" />
+  <meta property="og:description" content="A student-led STEM nonprofit building confidence, community, and career pathways for girls in STEM." />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#0d0d0d" />
+  <!-- Favicon: simple inline SVG with HER emphasis -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='16' fill='%230d0d0d'/%3E%3Ctext x='50' y='60' text-anchor='middle' font-family='Arial' font-size='52' fill='%23ff3ea5'%3EHER%3C/text%3E%3C/svg%3E" />
+  <style>
+    :root{
+      --bg:#0d0d0d; --card:#111; --muted:#9aa; --fg:#fff; --accent:#ff3ea5; --accent2:#59f; --max:1100px;
+      --border:#1e1e1e; --soft:#191919; --radius:1rem;
+      --field:#151515; --field-br:#262626; --gap:1rem; --gap-sm:.7rem; --gap-lg:1.25rem;
+      --shadow: 0 10px 24px rgba(0,0,0,.35), 0 2px 6px rgba(0,0,0,.25);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial}
+    a{color:var(--fg);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .container{max-width:var(--max);margin:0 auto;padding:0 1rem}
+
+    /* ===== Header & Nav ===== */
+    header{position:sticky;top:0;z-index:10;background:var(--bg);border-bottom:1px solid var(--soft)}
+    .nav{display:flex;align-items:center;justify-content:space-between;padding:.8rem 0}
+    .brand{font-weight:800;letter-spacing:.3px}
+    .brand .her{color:var(--accent)}
+    nav ul{display:flex;gap:1rem;list-style:none;margin:0;padding:0}
+    nav a{opacity:.95}
+    nav a.btn{background:var(--accent);color:#100;padding:.5rem .9rem;border-radius:999px;font-weight:700;transition:transform .08s ease, box-shadow .15s ease}
+    nav a.btn:hover{transform:translateY(-1px); box-shadow:0 6px 18px rgba(255,62,165,.25)}
+
+    /* ===== Hero ===== */
+    .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:2rem;align-items:center;padding:5rem 0 3rem;border-bottom:1px solid var(--soft)}
+    .hero h1{font-size: clamp(2rem, 4vw + 1rem, 4rem);line-height:1.1;margin:.2rem 0 1rem}
+    .hero p{color:#cfcfcf;margin:0 0 1.3rem}
+    .tag{display:inline-block;border:1px solid var(--border);padding:.25rem .6rem;border-radius:999px;color:#ddd;font-size:.9rem}
+    .cta{display:flex;flex-wrap:wrap;gap:.8rem}
+
+    /* ===== Buttons ===== */
+    .btn{display:inline-block;background:#fff;color:#111;padding:.75rem 1rem;border-radius:.8rem;font-weight:700;border:0;transition:transform .08s ease, box-shadow .15s ease}
+    .btn:hover{transform:translateY(-1px); box-shadow:0 10px 24px rgba(255,255,255,.07)}
+    .btn.secondary{background:#171717;color:#fff;border:1px solid var(--border)}
+    .btn.secondary:hover{box-shadow:0 10px 24px rgba(0,0,0,.3)}
+
+    /* ===== Grids & Cards ===== */
+    .grid{display:grid;gap:1rem}
+    .two{grid-template-columns:repeat(auto-fit,minmax(280px,1fr));}
+    .cards{grid-template-columns:repeat(auto-fit,minmax(240px,1fr));}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;transition:transform .12s ease, box-shadow .2s ease, border-color .2s ease}
+    .card:hover{transform:translateY(-2px); box-shadow:var(--shadow); border-color:#242424}
+    .card h3{margin:.4rem 0}
+    .muted{color:var(--muted)}
+
+    /* ===== Sections ===== */
+    .section{padding:3rem 0;border-bottom:1px solid var(--soft)}
+    .section h2{font-size:clamp(1.4rem,2.5vw,2.2rem);margin:0 0 1rem;position:relative;display:inline-block}
+    .section h2::after{
+      content:""; position:absolute; left:0; right:-6px; bottom:-6px; height:3px;
+      background:linear-gradient(90deg,var(--accent),var(--accent2));
+      border-radius:2px; opacity:.9; transform:scaleX(.2); transform-origin:left; transition:transform .5s ease;
+    }
+    .section.in h2::after{ transform:scaleX(1); }
+
+    /* ===== Pills ===== */
+    .pill{display:inline-flex;align-items:center;gap:.5rem;background:#121212;border:1px solid var(--border);border-radius:999px;padding:.4rem .7rem;font-size:.9rem}
+
+    /* ===== KPI ===== */
+    .kpis{grid-template-columns:repeat(auto-fit,minmax(180px,1fr));}
+    .kpi{padding:1rem;border-radius:var(--radius);background:#121212;border:1px solid var(--border);text-align:center; transition:transform .12s ease}
+    .kpi:hover{transform:translateY(-2px)}
+    .kpi .num{font-size:2rem;font-weight:800;color:#fff}
+    .kpi .cap{color:#aaa}
+
+    /* ===== Forms ===== */
+    .form{display:grid;gap:var(--gap)}
+    .form .row{display:grid;gap:var(--gap-sm)}
+    .form label{display:grid;gap:.35rem;font-weight:600}
+    .form input,.form select,.form textarea{background:var(--field);border:1px solid var(--field-br);color:#fff;border-radius:.6rem;padding:.7rem .8rem;font:inherit}
+    .form textarea{resize:vertical}
+    .form small{color:var(--muted)}
+    :focus{outline:none}
+
+    /* ===== FAQ ===== */
+    .faq details{background:#121212;border:1px solid var(--border);border-radius:.8rem;padding:1rem}
+    .faq details+details{margin-top:.7rem}
+
+    /* ===== Footer ===== */
+    footer{padding:2.5rem 0}
+    .logo-badge{display:none}
+
+    /* ===== Team images ===== */
+    .member-photo{
+      width:100%; aspect-ratio: 3/2; object-fit: cover;
+      border-radius: .7rem; border:1px solid var(--border); background:#0f0f0f;
+      transition: transform .15s ease, box-shadow .2s ease;
+    }
+    .member-photo:hover{ transform: translateY(-2px); box-shadow: var(--shadow); }
+
+    /* ===== Gallery ===== */
+    .gallery-grid{
+      display:grid; gap:10px;
+      grid-template-columns: repeat(12, 1fr);
+      grid-auto-rows: 110px; /* base height; creates a nice collage feel */
+    }
+    .tile{
+      position:relative; overflow:hidden; border-radius:.7rem; border:1px solid var(--border);
+      background:#101010;
+    }
+    .tile img{
+      width:100%; height:100%; object-fit:cover; display:block;
+      transition: transform .25s ease, filter .25s ease;
+    }
+    .tile:hover img{ transform:scale(1.06); filter:brightness(1.05); }
+    /* size presets for variety */
+    .w-3{grid-column: span 3;} .w-4{grid-column: span 4;} .w-5{grid-column: span 5;}
+    .h-1{grid-row: span 1;} .h-2{grid-row: span 2;} .h-3{grid-row: span 3;}
+
+    /* Lightbox */
+    .lightbox{
+      position:fixed; inset:0; background:rgba(0,0,0,.85);
+      display:none; align-items:center; justify-content:center; z-index:50; padding:2rem;
+    }
+    .lightbox.open{ display:flex; }
+    .lightbox img{
+      max-width:min(100%, 1100px); max-height:85vh; width:auto; height:auto; border-radius:.7rem; border:1px solid #222;
+      box-shadow:0 20px 50px rgba(0,0,0,.6);
+    }
+    .lightbox .close{
+      position:absolute; top:18px; right:18px; background:#181818; border:1px solid #2a2a2a; color:#fff;
+      border-radius:999px; padding:.5rem .75rem; cursor:pointer; font-weight:700;
+    }
+    .lightbox .close:hover{ filter:brightness(1.1); }
+    .lightbox .caption{
+      position:absolute; bottom:18px; left:50%; transform:translateX(-50%);
+      color:#ccc; font-size:.95rem; background:rgba(16,16,16,.6);
+      padding:.4rem .75rem; border-radius:.5rem; border:1px solid #2a2a2a;
+      max-width:min(90vw, 900px); text-align:center;
+    }
+
+    /* ===== Scroll reveal ===== */
+    .reveal{ opacity:0; transform: translateY(10px); transition: opacity .6s ease, transform .6s ease; }
+    .in .reveal{ opacity:1; transform:none; }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 900px){ 
+      .hero{grid-template-columns:1fr}
+      .gallery-grid{ grid-auto-rows: 90px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- =========================
+       Header & site navigation
+     ========================= -->
+  <header>
+    <div class="container nav">
+      <a href="#" class="brand">NextGen <span class="her">HER</span>oes</a>
+      <nav aria-label="Primary">
+        <ul>
+          <li><a href="#mission">Mission</a></li>
+          <li><a href="#programs">Programs</a></li>
+          <li><a href="#join">Join</a></li>
+          <li><a href="#events">Events</a></li>
+          <li><a href="#team">Team</a></li>
+          <li><a class="btn js-signup" href="#signup">Sign Up Now</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- =========================
+         HERO
+       ========================= -->
+    <section class="hero container section in">
+      <div class="reveal">
+        <span class="tag">Nonprofit registration: <strong>pending</strong></span>
+        <h1>Building the next wave of <span style="color:var(--accent)">HER</span>oes in STEM</h1>
+        <p>We close the confidence and access gaps for girls in STEM through study circles, peer mentorship, speaker series, and hands-on mini-challenges.</p>
+        <div class="cta">
+          <a class="btn js-signup" href="#signup">Sign Up Now</a>
+          <a class="btn secondary" href="#partner">Partner with Us</a>
+        </div>
+      </div>
+      <div style="display:grid;gap:1rem;align-content:start" class="reveal">
+        <div class="grid kpis">
+          <div class="kpi"><div class="num" id="kpiMembers">0</div><div class="cap">Members</div></div>
+          <div class="kpi"><div class="num" id="kpiMentors">0</div><div class="cap">Mentors</div></div>
+          <div class="kpi"><div class="num" id="kpiHelped">0</div><div class="cap">People Helped</div></div>
+          <div class="kpi"><div class="num" id="kpiFunds">$0</div><div class="cap">Money Raised</div></div>
+        </div>
+        <small class="muted">* Metrics update automatically as we grow. Edit values in the CONFIG near the bottom.</small>
+      </div>
+    </section>
+
+    <!-- =========================
+         Mission & Focus areas
+       ========================= -->
+    <section id="mission" class="section">
+      <div class="container">
+        <h2>Our mission</h2>
+        <div class="grid two" style="gap:1.5rem">
+          <div class="reveal">
+            <p>NextGen HERoes empowers girls to explore, build, and lead in STEM. We create supportive spaces to practice hard skills, celebrate effort, and make professional pathways feel real and reachable.</p>
+            <div class="grid cards" style="margin-top:1rem">
+              <div class="card"><h3>Confidence → Action</h3><p class="muted">Weekly study circles and project sprints that turn curiosity into real builds.</p></div>
+              <div class="card"><h3>Community → Belonging</h3><p class="muted">Peer mentorship so no one is learning alone.</p></div>
+              <div class="card"><h3>Career → Access</h3><p class="muted">Guest speakers, job-shadowing, and portfolio-ready challenges.</p></div>
+            </div>
+          </div>
+          <div class="reveal">
+            <h2>Focus areas</h2>
+            <ul class="programs">
+              <li><strong>STEM Study Circles</strong>: problem-solving sessions across CS, math, physics, and chem.</li>
+              <li><strong>Guest Speaker Series</strong>: monthly talks with researchers and engineers.</li>
+              <li><strong>Peer Mentorship</strong>: near-peer support for projects, contests, and courses.</li>
+              <li><strong>Science Reading Circle</strong>: accessible papers + discussion.</li>
+              <li><strong>Mini-Challenges</strong>: 1-week build sprints with showcases.</li>
+              <li><strong>STEM & Gender Gap Talks</strong>: evidence-based workshops.</li>
+              <li><strong>Social Campaigns</strong>: share wins, role models, and opportunities.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================
+         Programs summary
+       ========================= -->
+    <section id="programs" class="section">
+      <div class="container">
+        <h2>Programs</h2>
+        <div class="grid cards reveal">
+          <article class="card"><h3>Study Circles</h3><p class="muted">Weekly meetups to work through problem sets and labs together. Bring questions; leave with wins.</p></article>
+          <article class="card"><h3>Mentor Office Hours</h3><p class="muted">University students and industry pros offering guidance on projects, portfolios, and pathways.</p></article>
+          <article class="card"><h3>Speaker Series</h3><p class="muted">From AI to clean energy, hear how real careers unfold.</p></article>
+          <article class="card"><h3>Mini-Challenges</h3><p class="muted">Short, themed builds with feedback and prizes.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================
+         Quick external sign-up section
+       ========================= -->
+    <section class="section" id="signup-now">
+      <div class="container" style="text-align:center">
+        <h2>Ready to join?</h2>
+        <p class="muted">No experience needed — curiosity required.</p>
+        <p><a class="btn js-signup" href="#signup">Sign Up Now</a></p>
+        <small class="muted">(You’ll be taken to our Google Form.)</small>
+      </div>
+    </section>
+
+    <!-- =========================
+         Join: Student / Mentor / Partner
+       ========================= -->
+    <section id="join" class="section">
+      <div class="container">
+        <h2>Join us</h2>
+        <p class="muted">Pick what fits you best. No experience needed.</p>
+        <div class="grid cards reveal">
+          <div class="card">
+            <h3>Students</h3>
+            <p>Learn, build, and find your people.</p>
+            <p><a class="btn js-signup" href="#signup">Apply via Google Form</a></p>
+          </div>
+          <div class="card">
+            <h3>Mentors</h3>
+            <p>1–2 hrs/month. Big ripple effect.</p>
+            <p><a class="btn secondary" href="#mentor">Register interest</a></p>
+          </div>
+          <div class="card">
+            <h3>Partners</h3>
+            <p>Workshops, space, equipment, funding, or speakers.</p>
+            <p><a class="btn secondary" href="#partner">Contact us</a></p>
+          </div>
+        </div>
+
+        <!-- Student sign-up form (Netlify fallback) -->
+        <div id="signup" aria-live="polite" style="margin-top:var(--gap-lg)" class="reveal">
+          <h3>Student Quick Apply (fallback form)</h3>
+          <p class="muted">Prefer not to use Google? Use this form. When hosted on Netlify, submissions are captured in your Netlify dashboard.</p>
+          <form name="student-signup" method="POST" data-netlify="true" class="card form">
+            <input type="hidden" name="form-name" value="student-signup">
+            <input type="text" name="bot-field" hidden>
+            <div class="row">
+              <label>Full name<input required name="name"></label>
+              <label>Email<input required type="email" name="email"></label>
+            </div>
+            <div class="row">
+              <label>School / City<input name="school"></label>
+              <label>Interests<select name="interests">
+                <option>Computer Science</option>
+                <option>Math</option>
+                <option>Physics</option>
+                <option>Chemistry</option>
+                <option>Biology</option>
+                <option>Engineering</option>
+              </select></label>
+            </div>
+            <label>Why join?<textarea name="why" rows="3" placeholder="A sentence or two…"></textarea></label>
+            <button class="btn" type="submit">Submit</button>
+            <small class="muted">Heads up: Google Form is our main sign-up route above.</small>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================
+         Events
+       ========================= -->
+    <section id="events" class="section">
+      <div class="container">
+        <h2>Events</h2>
+        <div class="grid cards reveal">
+          <div class="card"><h3>Kickoff Info Session</h3><p class="muted">Date TBA • Meet the team, overview of programs, Q&A.</p></div>
+          <div class="card"><h3>Mini-Challenge #1</h3><p class="muted">1-week build sprint. Theme: “Everyday AI”.</p></div>
+          <div class="card"><h3>Speaker: TBD</h3><p class="muted">Industry or research guest. Stay tuned on IG.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================
+         Gallery (NEW, under Events)
+       ========================= -->
+    <section id="gallery" class="section">
+      <div class="container">
+        <h2>Gallery</h2>
+        <p class="muted">Highlights from study circles, mini-challenges, and wins in our community.</p>
+        <div class="gallery-grid reveal">
+          <!-- Replace src values with your images in /images/gallery/ -->
+          <a class="tile w-4 h-2" href="images/gallery/1.jpg">
+            <img src="images/gallery/1.jpg">
+          </a>
+          <a class="tile w-3 h-2" href="images/gallery/2.jpg">
+            <img src="images/gallery/2.jpg">
+          </a>
+          <a class="tile w-5 h-3" href="images/gallery/3.jpg">
+            <img src="images/gallery/3.jpg">
+          </a>
+          <a class="tile w-3 h-1" href="images/gallery/4.jpg">
+            <img src="images/gallery/4.jpg">
+          </a>
+          <a class="tile w-4 h-2" href="images/gallery/5.jpg">
+            <img src="images/gallery/5.jpg">
+          </a>
+          <a class="tile w-5 h-2" href="images/gallery/6.jpg">
+            <img src="images/gallery/6.jpg">
+          </a>
+        </div>
+      </div>
+
+      <!-- Lightbox modal -->
+      <div class="lightbox" id="lightbox" aria-hidden="true">
+        <button class="close" aria-label="Close gallery (Esc)">Close ✕</button>
+        <img src="" alt="" id="lightbox-img">
+        <div class="caption" id="lightbox-cap"></div>
+      </div>
+    </section>
+
+    <!-- =========================
+         Team
+       ========================= -->
+    <section id="team" class="section">
+      <div class="container">
+        <h2>Team</h2>
+        <div class="grid cards reveal">
+          <article class="card">
+            <img class="member-photo" src="images/olivia.jpg" alt="Olivia Zhang smiling, founder of NextGen HERoes">
+            <h3>Meet Olivia</h3>
+            <p class="muted">Student, coder, and unapologetic dance maniac. Can spend hours tinkering with code just to make a button change color. On a mission to make STEM feel like home.</p>
+          </article>
+
+          <article class="card">
+            <img class="member-photo" src="images/wenbo.jpg" alt="Wenbo, STEM enthusiast">
+            <h3>Meet Wenbo</h3>
+            <p class="muted">Math, physics, and CS enthusiast who loves turning tough problems into games.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================
+         Partners + contact form
+       ========================= -->
+    <section id="partner" class="section">
+      <div class="container">
+        <h2>Partner with us</h2>
+        <div class="grid two" style="gap:1.5rem">
+          <div class="reveal">
+            <p class="muted">Schools, companies, universities, and nonprofits: let’s co-host events, offer shadowing, and open doors.</p>
+            <ul>
+              <li class="pill">Workshop host</li>
+              <li class="pill">Space / equipment</li>
+              <li class="pill">Speakers / mentors</li>
+              <li class="pill">Micro-grants</li>
+            </ul>
+          </div>
+          <div class="card reveal">
+            <h3>Partner Contact</h3>
+            <form name="partner-contact" method="POST" data-netlify="true" class="form">
+              <input type="hidden" name="form-name" value="partner-contact">
+              <input type="text" name="bot-field" hidden>
+              <label>Organization<input required name="org" placeholder="Your org" /></label>
+              <label>Contact email<input required type="email" name="email" placeholder="you@org.com" /></label>
+              <label>How we can collaborate<textarea name="message" rows="3" placeholder="Tell us how you'd like to partner…"></textarea></label>
+              <button class="btn secondary" type="submit">Send</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================
+         FAQ
+       ========================= -->
+    <section class="section faq">
+      <div class="container">
+        <h2>FAQ</h2>
+        <details class="reveal"><summary>Are you an official nonprofit?</summary><p>Registration is in progress. Until finalized, donations are not tax-deductible. Programs are fully operational and community-supported.</p></details>
+        <details class="reveal"><summary>How much does it cost to join?</summary><p>Free. We’re committed to keeping access open; optional merch or event fees may apply for special activities.</p></details>
+        <details class="reveal"><summary>Do I need prior experience?</summary><p>Nope. Curiosity is enough. We meet you where you are.</p></details>
+      </div>
+    </section>
+  </main>
+
+  <!-- =========================
+       Footer
+     ========================= -->
+  <footer>
+    <div class="container two" style="gap:1rem;align-items:center">
+      <div>
+        <strong>NextGen <span style="color:var(--accent)">HER</span>oes</strong>
+        <p class="muted">© <span id="year"></span> • Vancouver, BC •
+          <a href="mailto:nextgenheroes.stem@gmail.com?subject=Hello%20from%20the%20website" target="_blank" rel="noopener">nextgenheroes.stem@gmail.com</a>
+        </p>
+        <p class="muted">Nonprofit status: <em>pending registration</em>. We’ll update our legal page when finalized.</p>
+      </div>
+      <div style="justify-self:end;display:flex;gap:.6rem;align-items:center">
+        <a class="pill" href="https://www.instagram.com/nextgen_heroes.stem/" target="_blank" rel="noopener" aria-label="Instagram">Instagram</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ========== CONFIG ==========
+    const SIGNUP_FORM_URL = "https://forms.gle/nextgen-heroes-student"; // <-- replace with your real Google Form link
+
+    // KPI target values. Update these as you grow.
+    const KPI_TARGETS = { members: 4, mentors: 0, helped: 0, funds: 0 };
+
+    // Footer year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Wire up all Sign-Up buttons to the external form
+    document.querySelectorAll('.js-signup').forEach(a => {
+      a.href = SIGNUP_FORM_URL;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.setAttribute('aria-label', 'Open sign-up form in a new tab');
+      if (!SIGNUP_FORM_URL || SIGNUP_FORM_URL.includes('placeholder')) {
+        a.href = '#signup';
+        a.removeAttribute('target');
+        a.removeAttribute('rel');
+        a.setAttribute('aria-label', 'Jump to the in-page signup form');
+      }
+    });
+
+    // KPI counters
+    const el = {
+      members: document.getElementById('kpiMembers'),
+      mentors: document.getElementById('kpiMentors'),
+      helped: document.getElementById('kpiHelped'),
+      funds: document.getElementById('kpiFunds')
+    };
+
+    const animateCount = (node, max, dur=900) => {
+      const start = performance.now();
+      const step = (t) => {
+        const p = Math.min(1, (t - start) / dur);
+        node.textContent = Math.round(p * max);
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+
+    const animateMoney = (node, max, dur=1000) => {
+      const start = performance.now();
+      const fmt = (n) => `$${Math.round(n).toLocaleString()}`;
+      const step = (t) => {
+        const p = Math.min(1, (t - start) / dur);
+        node.textContent = fmt(p * max);
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+
+    animateCount(el.members, KPI_TARGETS.members, 900);
+    animateCount(el.mentors, KPI_TARGETS.mentors, 900);
+    animateCount(el.helped, KPI_TARGETS.helped, 1100);
+    animateMoney(el.funds, KPI_TARGETS.funds, 1100);
+
+    // Smooth scroll for internal links
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', (e)=>{
+        const id = a.getAttribute('href').slice(1);
+        const node = document.getElementById(id);
+        if(node){ e.preventDefault(); node.scrollIntoView({behavior:'smooth'}); }
+      });
+    });
+
+    // ===== Scroll reveal (adds .in to section when visible) =====
+    const onIntersect = (entries) => {
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          entry.target.classList.add('in');
+          observer.unobserve(entry.target);
+        }
+      });
+    };
+    const observer = new IntersectionObserver(onIntersect, { threshold: .15 });
+    document.querySelectorAll('.section').forEach(sec=>observer.observe(sec));
+
+    // ===== Lightbox for Gallery =====
+    const lb = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lightbox-img');
+    const lbCap = document.getElementById('lightbox-cap');
+    const openLB = (src, cap, alt) => {
+      lbImg.src = src; lbImg.alt = alt || '';
+      lbCap.textContent = cap || '';
+      lb.classList.add('open');
+      lb.setAttribute('aria-hidden','false');
+    };
+    const closeLB = () => {
+      lb.classList.remove('open');
+      lb.setAttribute('aria-hidden','true');
+      // Clear after animation for memory
+      setTimeout(()=>{ lbImg.src=''; lbImg.alt=''; lbCap.textContent=''; }, 120);
+    };
+    lb.addEventListener('click', (e)=>{ if(e.target === lb) closeLB(); });
+    lb.querySelector('.close').addEventListener('click', closeLB);
+    window.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && lb.classList.contains('open')) closeLB(); });
+
+    document.querySelectorAll('#gallery .tile').forEach(tile=>{
+      tile.addEventListener('click', (e)=>{
+        e.preventDefault();
+        const href = tile.getAttribute('href');
+        const cap = tile.getAttribute('data-caption') || '';
+        const img = tile.querySelector('img');
+        openLB(href, cap, img ? img.alt : '');
+      });
+    });
+  </script>
+</body>
+</html>
