@@ -44,6 +44,9 @@
     .btn:hover{transform:translateY(-1px); box-shadow:0 10px 24px rgba(255,255,255,.07)}
     .btn.secondary{background:#171717;color:#fff;border:1px solid var(--border)}
     .btn.secondary:hover{box-shadow:0 10px 24px rgba(0,0,0,.3)}
+    /* NEW: donate button style (pink like the nav button) */
+    .btn.donate{background:var(--accent);color:#100}
+    .btn.donate:hover{box-shadow:0 10px 24px rgba(255,62,165,.18)}
 
     .grid{display:grid;gap:1rem}
     .two{grid-template-columns:repeat(auto-fit,minmax(280px,1fr));}
@@ -90,7 +93,6 @@
     }
     .member-photo:hover{ transform: translateY(-2px); box-shadow: var(--shadow); }
 
-    /* Certificate image (smaller, centered) */
     .certificate{
       width:100%;
       max-width:520px;
@@ -124,6 +126,7 @@
           <li><a href="#events">Events</a></li>
           <li><a href="#team">Team</a></li>
           <li><a href="#certificate">Certificate</a></li>
+          <li><a class="btn js-donate" href="#donate">Donate</a></li>
           <li><a class="btn js-student" href="#signup">Student Sign Up</a></li>
         </ul>
       </nav>
@@ -140,10 +143,12 @@
         <p>We close the confidence and access gaps for girls in STEM through study circles, peer mentorship, and hands-on mini-challenges.</p>
 
         <div class="cta">
+          <a class="btn donate js-donate" href="#donate">Donate</a>
           <a class="btn js-student" href="#signup">Student Sign Up</a>
           <a class="btn secondary js-tutor" href="#tutor-signup">Become a Tutor</a>
           <a class="btn secondary" href="#partner">Partner with Us</a>
         </div>
+        <small class="muted">Donations are processed securely via Stripe.</small>
       </div>
 
       <div style="display:grid;gap:1rem;align-content:start" class="reveal">
@@ -152,6 +157,41 @@
           <div class="kpi"><div class="num" id="kpiMentors">0</div><div class="cap">Mentors/Tutors</div></div>
           <div class="kpi"><div class="num" id="kpiHelped">0</div><div class="cap">People Helped</div></div>
           <div class="kpi"><div class="num" id="kpiFunds">$0</div><div class="cap">Money Raised</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEW: donate section -->
+    <section id="donate" class="section">
+      <div class="container">
+        <h2>Donate</h2>
+        <div class="grid two" style="gap:1.5rem">
+          <div class="reveal">
+            <p>
+              Your donation directly supports students in need by funding free educational workshops, outreach programs,
+              and learning resources organized by a student-led nonprofit. All funds are used to reduce barriers, support
+              student learning, and create accessible pathways for girls to explore and grow with confidence in STEM.
+            </p>
+            <p class="muted">Donations are processed securely through Stripe.</p>
+            <p style="display:flex;gap:.8rem;flex-wrap:wrap">
+              <a class="btn donate js-donate" href="#donate">Donate via Stripe</a>
+              <a class="btn secondary" href="https://www.instagram.com/nextgen_heroes.stem/" target="_blank" rel="noopener">Share on Instagram</a>
+            </p>
+          </div>
+
+          <div class="card reveal">
+            <h3>What your support funds</h3>
+            <ul class="muted" style="margin:.5rem 0 0; padding-left: 1.1rem">
+              <li>Free STEM workshops and study circles</li>
+              <li>Learning resources for students who need support</li>
+              <li>Mini-challenges, supplies, and outreach</li>
+            </ul>
+            <div class="card" style="margin-top:1rem">
+              <p class="muted" style="margin:0">
+                Note: Donations are not automatically tax-deductible unless/until registered charity status is obtained.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -210,6 +250,7 @@
         <p style="display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap">
           <a class="btn js-student" href="#signup">Student Sign Up</a>
           <a class="btn secondary js-tutor" href="#tutor-signup">Become a Tutor</a>
+          <a class="btn donate js-donate" href="#donate">Donate</a>
         </p>
         <small class="muted">(Both open in a new tab as Google Forms.)</small>
       </div>
@@ -419,6 +460,7 @@
       </div>
       <div style="justify-self:end;display:flex;gap:.6rem;align-items:center">
         <a class="pill" href="https://www.instagram.com/nextgen_heroes.stem/" target="_blank" rel="noopener" aria-label="Instagram">Instagram</a>
+        <a class="pill js-donate" href="#donate" aria-label="Donate">Donate</a>
       </div>
     </div>
   </footer>
@@ -426,6 +468,8 @@
   <script>
     const STUDENT_SIGNUP_URL = "https://forms.gle/3yGXUGok7MVesQUs6";
     const TUTOR_SIGNUP_URL   = "https://forms.gle/WgBDHYjAh4qoyFkf9";
+    const DONATE_URL         = "https://buy.stripe.com/00w4grcwRcy91lvd4a6Ri01";
+
     const KPI_TARGETS = { members: 10, mentors: 2, helped: 0, funds: 0 };
 
     document.getElementById('year').textContent = new Date().getFullYear();
@@ -438,6 +482,13 @@
 
     document.querySelectorAll('.js-tutor').forEach(a => {
       a.href = TUTOR_SIGNUP_URL;
+      a.target = '_blank';
+      a.rel = 'noopener';
+    });
+
+    /* NEW: wire all donate buttons */
+    document.querySelectorAll('.js-donate').forEach(a => {
+      a.href = DONATE_URL;
       a.target = '_blank';
       a.rel = 'noopener';
     });
